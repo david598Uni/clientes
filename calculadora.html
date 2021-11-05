@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Calculadora</title>
+    <style>
+        article {
+            margin-top: 20px;
+            margin-left: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <section>
+            <form>
+                <article>
+                    <label for="n1">Op1</label>
+                    <input type="text" id="n1" name="n1">
+                    <label for="n2">Op2</label>
+                    <input type="text" id="n2" name="n2">
+                </article>
+                <article>
+                    <label id="resultado" style="border: 1px solid black;">Resultado: </label>
+                    <select id="operaciones" onchange="seleccion(this)" style="margin-left: 200px;">
+                        <option>Operacion</option>
+                        <option value="+">+</option>
+                        <option value="-">-</option>
+                        <option value="*">*</option>
+                        <option value="/">/</option>
+                        <option value="^">^</option>
+                        <option value="raiz">raiz</option>
+                    </select>
+                </article>
+                <article>
+                    <input type="radio" value="directo" name="formato" onclick="formatoSalida(this.value)">
+                    <label for="directo">Directo</label>
+                    <input type="checkbox" id="abs" value="abs" name="abs" onchange="absoluto(this)"
+                        style="margin-left: 200px;">
+                    <label for="abs">Valor Absoluto</label>
+                    <br>
+                    <input type="radio" value="techo" name="formato" onclick="formatoSalida(this.value)">
+                    <label for="techo">Techo</label>
+                    <button id="aleatorio" style="margin-left: 200px;">Aleatorizar</button>
+                    <br>
+                    <input type="radio" value="suelo" name="formato" onclick="formatoSalida(this.value)">
+                    <label for="suelo">Suelo</label>
+                    <br>
+                    <input type="radio" value="redondeo" name="formato" onclick="formatoSalida(this.value)">
+                    <label for="redondeo">Redondeo</label>
+                </article>
+                <article>
+                    <textarea id="log" name="log"></textarea>
+                </article>
+            </form>
+        </section>
+    </main>
+
+    <script>
+
+        var errores = [];
+        var formatoResultado = "directo";
+        var valorAbsoluto = false;
+
+        function seleccion(s) {
+            let op = s.value;
+
+
+            calculo(op, formatoResultado);
+
+
+
+            console.log(errores);
+
+        }
+
+        function calculo(op, f) {
+            let res = 0;
+            let a = document.getElementById("n1").value;
+            let b = document.getElementById("n2").value;
+            document.getElementById("resultado").innerHTML = "Resultado: ";
+            if (checkError(a, b)) {
+                a = Number(a);
+                b = Number(b);
+
+                switch (op) {
+
+                    case "+":
+                        res = a + b;
+                        break;
+
+                    case "-":
+                        res = a - b;
+                        break;
+
+                    case "*":
+                        res = a * b;
+                        break;
+
+                    case "/":
+                        res = a / b;
+                        break;
+
+                    case "^":
+                        res = Math.pow(a, b);
+                        break;
+
+                    case "raiz":
+                        res = Math.sqrt(a);
+                        res = res.toFixed(2);
+                        break;
+
+
+                }
+
+                if (valorAbsoluto) {
+                    res = Math.abs(res);
+                }
+            }
+
+            switch (f) {
+                case "directo":
+                    document.getElementById("resultado").innerHTML += res;
+                    break;
+                case "techo":
+                    document.getElementById("resultaformatodo").innerHTML += Math.round(res);
+                    break;
+                case "suelo":
+                    document.getElementById("resultado").innerHTML += Math.floor(res);
+                    break;
+                case "redondeo":
+                    document.getElementById("resultado").innerHTML += Math.round(res);
+                    break;
+            }
+
+        }
+
+        function absoluto(abs) {
+
+            if (valorAbsoluto) {
+                valorAbsoluto = false;
+            } else {
+                valorAbsoluto = true;
+            }
+
+            calculo(document.getElementById("operaciones").value, formatoResultado);
+
+        }
+
+        function formatoSalida(formato) {
+
+            formatoResultado = formato;
+            calculo(document.getElementById("operaciones").value, formato);
+
+        }
+
+
+
+
+
+        // se encarga de comprobar las entradas de numeros
+        function checkError(a, b) {
+
+            if (a == "") {
+
+                errores.push("Op1 vacio");
+                return false;
+            } else {
+                if (isNaN(a) || isNaN(b)) {
+                    errores.push("valor no valido");
+                    return false;
+                }
+                return true;
+
+            }
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>

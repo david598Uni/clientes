@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ejercicio</title>
+    <style>
+       
+
+        table {
+            border: 1px solid red;
+            padding: 5px;
+
+        }
+
+        th {
+            border: 1px solid rgb(70, 90, 51);
+            padding: inherit;
+        }
+
+        td {
+            border: 1px solid rgb(61, 54, 70);
+            padding: inherit;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>TABLA</h1>
+    </header>
+    <main>
+        <section id="tabla">
+
+        </section>
+    </main>
+</body>
+
+<script>
+    var numeroAlumnos = 15;
+    var numeroAsignaturas = 4;
+
+    var alumnos = [];
+    var asignaturas = [];
+    var notas = [[]];
+
+    alumnos = crearAlumnos(numeroAlumnos, alumnos);
+    asignaturas = crearAsignaturas(numeroAsignaturas, asignaturas);
+    notas = crearNotas(numeroAlumnos, numeroAsignaturas);
+
+    crearTabla();
+
+
+
+    function crearTabla() {
+        var tabla = document.createElement("table");
+        var cabezeras = [];
+        var row = [];
+        tabla.appendChild(document.createElement("th")); /// por formato de tabla
+        for (var i = 0; i < numeroAsignaturas; i++) {
+            cabezeras.push(document.createElement("th"));
+            cabezeras[i].innerHTML = asignaturas[i];
+            tabla.appendChild(cabezeras[i]);
+        }
+        //este bloque añade la cabezera de la media y la desviazon tipicas horizontales
+        let cabezeraMedia = document.createElement("th");
+        cabezeraMedia.innerHTML = "Media";
+        tabla.appendChild(cabezeraMedia);
+        let cabezeraDesviacionTipica = document.createElement("th");
+        cabezeraDesviacionTipica.innerHTML = "Desviacion Tipica";
+        tabla.appendChild(cabezeraDesviacionTipica);
+        //llena la tabla de filas y datos
+        for (var i = 0; i < numeroAlumnos; i++) {
+            row.push(document.createElement("tr"));
+            let alum = document.createElement("td");
+            alum.innerHTML = alumnos[i];
+            row[i].appendChild(alum);
+            for (var j = 0; j < numeroAsignaturas; j++) {
+                let td = document.createElement("td");
+                td.innerHTML = notas[i][j];
+                ///// acordarse del color
+                if(td.innerHTML < 4){
+                    td.style.backgroundColor = "red";
+                }else if(td.innerHTML > 6){
+                    td.style.backgroundColor = "green";
+                }
+                else{
+                    td.style.backgroundColor = "yellow";
+                }
+                //
+                row[i].appendChild(td);
+            }
+            tabla.appendChild(row[i]);
+        }
+        //este bloque añade la cabezera de la media y la desviazon tipicas verticales
+        row.push(document.createElement("tr"));
+        let med = document.createElement("td");
+        med.innerHTML = "Media";
+        row[row.length - 1].appendChild(med);
+
+        row.push(document.createElement("tr"));
+        let dt = document.createElement("td");
+        dt.innerHTML = "Desviacion Tipica";
+        row[row.length - 1].appendChild(dt);
+
+        tabla.appendChild(row[row.length - 2]);
+        tabla.appendChild(row[row.length - 1]);
+
+
+        for(var i = 0; i<numeroAlumnos;i++){
+            let celdam = document.createElement("td");
+            let celdadt = document.createElement("td");
+            celdam.innerHTML = media(notas[i]);
+            celdadt.innerHTML = desviacionTipica(notas[i]);
+            row[i].appendChild(celdam);
+            row[i].appendChild(celdadt);
+        }
+
+        var tras = traspuesta(notas);
+        for(var i = 0; i<numeroAsignaturas;i++){
+            let celdam = document.createElement("td");
+            let celdadt = document.createElement("td");
+            celdam.innerHTML = media(tras[i]);
+            celdadt.innerHTML = desviacionTipica(tras[i]);
+            row[row.length - 2].appendChild(celdam);
+            row[row.length - 1].appendChild(celdadt);
+        }
+
+
+
+        document.getElementById("tabla").appendChild(tabla);
+
+
+
+    }
+
+
+    /* 
+    Parametros: array
+    Return: array
+    */
+    function traspuesta(matriz) {
+        let matrizTras = [];
+        let dimensionX = matriz.length;
+        let dimensionY = matriz[0].length;
+
+        for (var i = 0; i < dimensionY; i++) {
+            matrizTras[i] = new Array();
+            for (var j = 0; j < dimensionX; j++) {
+                matrizTras[i].push(matriz[j][i]);
+            }
+        }
+        return matrizTras;
+    }
+
+
+
+    /* 
+    Parametros: array
+    Return: int
+    */
+    function media(notas) {
+        let r = notas.reduce((a, b) => a + b);
+        r = r / notas.length;
+        return r;
+    }
+
+    /* 
+    Parametros: array
+    Return: int
+    */
+    function desviacionTipica(notas) {
+        let x = 0;
+        for (var i = 0; i < notas.length; i++) {
+            x = x + Math.pow((notas[i] - media(notas)), 2);
+        }
+        x = Math.sqrt(x / notas.length);
+
+        return parseFloat(x).toFixed(2);;
+    }
+
+
+    /* 
+    Parametros: numero de alumnos y numero de asignaturas
+    Return: array bidimensional
+    */
+    function crearNotas(alumnos, asignaturas) {
+        let array = [];
+        for (var i = 0; i < alumnos; i++) {
+            array[i] = new Array();
+            for (var j = 0; j < asignaturas; j++) {
+                let x = Math.floor(Math.random() * 11);
+                array[i].push(x);
+            }
+        }
+        return array;
+    }
+
+    /* 
+    Parametros: numero de asignaturas
+    Return: array 
+    */
+    function crearAsignaturas(numero, asignaturas) {
+        for (var i = 1; i <= numero; i++) {
+            asignaturas.push("Asig_" + i);
+        }
+        return asignaturas;
+    }
+    /* 
+    Parametros: numero de alumnos
+    Return: array 
+    */
+    function crearAlumnos(numero, alumnos) {
+        for (var i = 1; i <= numero; i++) {
+            alumnos.push("A_" + i);
+        }
+        return alumnos;
+    }
+</script>
+
+</html>

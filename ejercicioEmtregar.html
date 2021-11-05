@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<head>
+
+    <style>
+        #tabla {
+            border: 1px solid black;
+            margin: 40px auto;
+        }
+        td {
+            border: 1px solid black;
+        }
+    </style>
+
+</head>
+
+<body>
+    <main>
+        <article>
+            <table id="tabla">
+
+            </table>
+        </article>
+
+    </main>
+
+    <script>
+        const alumnos = ["Al1", "Al2", "Al3", "Al4", "Al5", "Al6"];
+        const asignaturas = ["Biologia", "Matematicas", "Historia", "Filosofia","Lengua"];
+
+        rellenarTabla(alumnos, asignaturas);
+
+        function rellenarTabla(alumnos, asignaturas) {
+            var tabla = "<tr><td></td>";
+            var notas = [];
+
+
+            for (var i = 0; i < asignaturas.length; i++) {
+                tabla += "<td>" + asignaturas[i] + "</td>";
+            }
+            tabla += "<td>Media</td><td>Des. Tipica</td>";
+
+            for (var j = 0; j < alumnos.length; j++) {
+                tabla += "<tr><td>" + alumnos[j] + "</td>";
+                notas[j] = new Array(asignaturas.length);
+                for (var i = 0; i < asignaturas.length; i++) {
+                    let x = Math.floor(Math.random() * 11);
+                    let s = estilo(x);
+                    tabla += "<td " + s + ">" + x + "</td>";
+                    notas[j].push(x);
+                }
+
+                tabla += "<td>" + calculoMedia(notas[j].filter(check)) + "</td><td>" + desviacionTipica(notas[j].filter(check)) + "</td></tr>";
+
+            }
+            tabla += "<tr><td>Media</td>";
+                console.log(notas.length);
+            for (var i = 0; i < asignaturas.length; i++) {
+                tabla += "<td>" + calculoMedia(notasAsig(notas)[i]) + "</td>";
+            }
+            tabla += "</tr>";
+            tabla += "<tr><td>Des. Tipica</td>";
+            for (var i = 0; i < asignaturas.length; i++) {
+                tabla += "<td>" + desviacionTipica(notasAsig(notas)[i]) + "</td>";
+            }
+            tabla += "</tr>";
+
+
+
+
+            // console.log(notas);
+
+
+            document.getElementById("tabla").innerHTML = tabla;
+
+        }
+        function check(n) {
+            return n >= 0;
+        }
+
+        function notasAsig(notas) {
+
+            let i = 0;
+            let j = 0;
+            //console.log(notas);
+            let array = [];
+
+            for (i = 0; i < notas.length; i++) {
+                array.push([]);
+                for (j = 0; j <= notas[i].filter(check).length; j++) {
+                    array[i].push(notas[j].filter(check)[i]);
+                }
+            }
+
+            return array;
+
+        }
+        function desviacionTipica(array) {
+            let res = 0;
+            let med = calculoMedia(array);
+
+            for (var i = 0; i < array.length; i++) {
+
+                res = res + Math.pow((array[i] - med), 2);
+            }
+            res = res / array.length;
+
+
+
+            return Math.sqrt(res).toFixed(2);
+        }
+
+        function estilo(num) {
+            var n = parseInt(num);
+
+            if (n < 4) {
+                return "style = 'background-color: red'";
+            }
+            else if (n == 4 || n == 5) {
+                return "style = 'background-color: yellow'";
+            }
+            else if (n > 5) {
+                return "style = 'background-color: green'";
+            }
+        }
+
+        function calculoMedia(array) {
+            let res = array.reduce((a, b) => a + b);
+
+            return (res / array.length).toFixed(2);;
+        }
+    </script>
+</body>
