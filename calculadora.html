@@ -34,20 +34,21 @@
                     </select>
                 </article>
                 <article>
-                    <input type="radio" value="directo" name="formato" onclick="formatoSalida(this.value)">
+                    <input type="radio" id="directo" value="directo" name="formato" onclick="formatoSalida(this.value)">
                     <label for="directo">Directo</label>
                     <input type="checkbox" id="abs" value="abs" name="abs" onchange="absoluto(this)"
                         style="margin-left: 200px;">
                     <label for="abs">Valor Absoluto</label>
                     <br>
-                    <input type="radio" value="techo" name="formato" onclick="formatoSalida(this.value)">
+                    <input type="radio" id="techo" value="techo" name="formato" onclick="formatoSalida(this.value)">
                     <label for="techo">Techo</label>
-                    <button id="aleatorio" style="margin-left: 200px;">Aleatorizar</button>
+                    <button id="aleatorio" style="margin-left: 200px;" onclick="aleatorizar()">Aleatorizar</button>
                     <br>
-                    <input type="radio" value="suelo" name="formato" onclick="formatoSalida(this.value)">
+                    <input type="radio" id="suelo" value="suelo" name="formato" onclick="formatoSalida(this.value)">
                     <label for="suelo">Suelo</label>
                     <br>
-                    <input type="radio" value="redondeo" name="formato" onclick="formatoSalida(this.value)">
+                    <input type="radio" id="redondeo" value="redondeo" name="formato"
+                        onclick="formatoSalida(this.value)">
                     <label for="redondeo">Redondeo</label>
                 </article>
                 <article>
@@ -63,6 +64,8 @@
         var formatoResultado = "directo";
         var valorAbsoluto = false;
 
+        console.log("-------------------------------------");
+
         function seleccion(s) {
             let op = s.value;
 
@@ -76,6 +79,7 @@
         }
 
         function calculo(op, f) {
+
             let res = 0;
             let a = document.getElementById("n1").value;
             let b = document.getElementById("n2").value;
@@ -124,7 +128,7 @@
                     document.getElementById("resultado").innerHTML += res;
                     break;
                 case "techo":
-                    document.getElementById("resultaformatodo").innerHTML += Math.round(res);
+                    document.getElementById("resultado").innerHTML += Math.round(res);
                     break;
                 case "suelo":
                     document.getElementById("resultado").innerHTML += Math.floor(res);
@@ -134,7 +138,36 @@
                     break;
             }
 
+            console.log(res);
+
         }
+
+
+        function aleatorizar() {
+            let formatos = ["directo", "techo", "suelo", "redondeo"];
+            let operaciones = ["+", "-", "*", "/", "^", "raiz"];
+
+            let x = Math.floor(Math.random() * (formatos.length - 0 + 1) + 0);
+            let y = Math.floor(Math.random() * (operaciones.length - 0 + 1) + 0);
+
+
+            let z = Math.round(Math.random());
+            console.log(x);
+
+            if (z == 0) {
+                valorAbsoluto = false;
+                document.getElementById("abs").checked = false;
+            } else {
+                document.getElementById("abs").checked = true;
+                valorAbsoluto = true;
+            }
+
+            document.getElementById(formatos[x]).checked = true;
+            document.getElementById("operaciones").value = operaciones[y];
+            calculo(formatos[x], operaciones[y]);
+
+        }
+
 
         function absoluto(abs) {
 
